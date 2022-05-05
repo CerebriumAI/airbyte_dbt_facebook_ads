@@ -11,8 +11,8 @@ models:
   - name: intercom__users
     description: "A table storing all user information in Intercom."
     columns:
-      - name: issue_id
-        description: "The unique identifier for the issue being resolved"
+      - name: user_id
+        description: "The unique identifier for the user"
         tests:
           - unique
           - not_null
