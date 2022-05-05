@@ -1,0 +1,34 @@
+version: 2
+
+sources:
+  - name: airbyte_intercom
+    schema: "{{ var('intercom_schema', 'intercom') }}"
+    database: "{% if target.type != 'spark'%}{{ var('intercom_database', target.database) }}{% endif %}"
+    tables:
+      - name: users
+
+models:
+  - name: intercom__users
+    description: "A table storing all user information in Intercom."
+    columns:
+      - name: issue_id
+        description: "The unique identifier for the issue being resolved"
+        tests:
+          - unique
+          - not_null
+
+metrics:
+  - name: number_of_users
+    label: Number of users
+    model: ref('intercom__users')
+    description: "The number of users"
+
+    type: count
+    sql: issue_id
+
+    timestamp: created_at_timestamp
+    time_grains: [day, week, month]
+
+    dimensions:
+      - state
+
