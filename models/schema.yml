@@ -1,34 +1,134 @@
 version: 2
 
+models:
+  - name: intercom__companies
+    description: >
+      Each record represents a single company, enriched with data related to the company industry, monthly_spend, and user_count.
+    columns:
+      - name: company_id
+        description: The unique identifier representing the historical Intercom defined company.
+        tests:
+          - not_null
+          - unique
+      - name: company_name
+        description: The name of the company.
+      - name: created_at_timestamp
+        description: The time the company was created.
+      - name: website
+        description: The website associated with the company.
+      - name: industry
+        description: The defined industry the company operates in.
+      - name: monthly_spend
+        description: How much revenue the company generates for your business.
+      - name: user_count
+        description: The total count of users associated with the company.
+      - name: session_count
+        description: The count of sessions the company has recorded.
+      - name: plan_id
+        description: Unique identifier representing the company plan.
+      - name: plan_name
+        description: The name of the plan you have associated with the company.
+      - name: updated_at_timestamp
+        description: The time the company was last updated at.
+
+  - name: intercom__contacts
+    description: >
+      Each record represents a single contact, enriched with data identifying the contacts role, if they have unsubscribed from 
+      the email list, last contacted information, and which company they belong to.
+    columns:
+      - name: contact_id
+        description: The unique identifier for the contact which is given by Intercom.
+        tests:
+          - not_null
+          - unique
+      - name: contact_name
+        description: The name of the contact.
+      - name: admin_id
+        description: The unique identifier representing the admin which has been assigned ownership of the contact.
+      - name: created_at_timestamp
+        description: The time when the contact was created within Intercom.
+      - name: updated_at_timestamp
+        description: The time when the contact was last updated.
+      - name: signed_up_at_timestamp
+        description: The time the contact signed up.
+      - name: email
+        description: The contacts email.
+      - name: phone
+        description: The contacts phone number.
+      - name: last_contacted_at
+        description: The time when the contact was last messaged.
+      - name: last_email_opened_at
+        description: The time when a contact last opened an email.
+      - name: last_email_clicked_at
+        description: The time when the contact last clicked a link in an email.
+      - name: last_replied_at
+        description: The time when the contact last messaged in.
+      - name: is_unsubscribed_from_emails
+        description: Boolean indicating whether the contact has unsubscribed from emails.
+      - name: all_contact_company_names
+        description: String aggregation of all companies the contact is associated with.
+
+  - name: intercom__conversations
+    description: >
+      Each record represents a single conversation, enriched with data from the multiple conversation parts. The conversation 
+      parts provide relevant information such as who was assigned to the conversation, which contact the conversation was with, 
+      the current conversation state, who closed the conversation, and the final conversation ratings from the contact.
+    columns:
+      - name: conversation_id
+        description: The id representing the conversation.
+        tests:
+          - not_null
+          - unique
+      - name: conversation_created_at
+        description: The time the conversation was created.
+      - name: conversation_last_updated_at
+        description: The date the conversation was last updated at.
+      - name: conversation_type
+        description: The type of conversation. This includes conversation push facebook twitter and email.
+      - name: conversation_subject
+        description: The subject of the conversation created by the initiator.
+      - name: first_close_by_admin_id
+        description: The admin_id of the admin who was first assigned to the conversation.
+      - name: last_close_by_admin_id
+        description: The admin_id of the admin who last closed the conversation.
+      - name: first_contact_author_id
+        description: The contact_id of the contact who was first associated with the conversation.
+      - name: last_contact_author_id
+        description: The contact_id of the contact who was last associated with the conversation before closing.
+      - name: conversation_state
+        description: The current state of the conversation (open or close).
+      - name: is_read
+        description: Boolean indicating whether the conversation message has been read.
+
 sources:
   - name: airbyte_intercom
     schema: "{{ var('intercom_schema', 'intercom') }}"
     database: "{% if target.type != 'spark'%}{{ var('intercom_database', target.database) }}{% endif %}"
     tables:
-      - name: users
-
-models:
-  - name: intercom__users
-    description: "A table storing all user information in Intercom."
-    columns:
-      - name: user_id
-        description: "The unique identifier for the user"
-        tests:
-          - unique
-          - not_null
+      - name: contacts
+      - name: conversations
+      - name: companies
 
 metrics:
-  - name: number_of_users
-    label: Number of users
-    model: ref('intercom__users')
-    description: "The number of users"
+  - name: number_of_contacts
+    label: Number of contacts
+    model: ref('intercom__contacts')
+    description: "The number of contacts"
 
     type: count
-    sql: issue_id
+    sql: contact_id
 
     timestamp: created_at_timestamp
     time_grains: [day, week, month]
 
-    dimensions:
-      - state
+  - name: number_of_unread_conversations
+    label: Number of unread conversations
+    model: ref('intercom__conversations')
+    description: "The number of unread conversations"
+
+    type: count
+    sql: conversation_id
+
+    timestamp: created_at_timestamp
+    time_grains: [day, week, month]
 
