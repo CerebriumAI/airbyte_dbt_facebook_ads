@@ -4,7 +4,7 @@ with companies as (
         company_id,
         created_at_timestamp
 
-    from {{ ref('stg_intercom_companies_tmp') }}
+    from {{ ref('stg_intercom__companies') }}
 
 )
 
