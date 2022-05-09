@@ -85,8 +85,8 @@ models:
         description: The date the conversation was last updated at.
       - name: conversation_type
         description: The type of conversation. This includes conversation push facebook twitter and email.
-      - name: conversation_subject
-        description: The subject of the conversation created by the initiator.
+      - name: conversation_title
+        description: The title of the conversation created by the initiator.
       - name: first_close_by_admin_id
         description: The admin_id of the admin who was first assigned to the conversation.
       - name: last_close_by_admin_id
