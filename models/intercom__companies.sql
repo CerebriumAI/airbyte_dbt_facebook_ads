@@ -1,10 +1,30 @@
-with companies as (
+with companies_plan as (
+
+    select
+        _airbyte_companies_hashid,
+        plan_id,
+        plan_name
+    from {{ ref('stg_intercom__companies_plan' )}}
+
+),
+
+companies as (
 
     select
         company_id,
-        created_at_timestamp
+        company_name,
+        created_at_timestamp,
+        industry,
+        monthly_spend,
+        companies_plan.plan_id,
+        companies_plan.plan_name,
+        session_count,
+        updated_at_timestamp,
+        user_count,
+        website
 
     from {{ ref('stg_intercom__companies') }}
+    left join companies_plan using (_airbyte_companies_hashid)
 
 )
 

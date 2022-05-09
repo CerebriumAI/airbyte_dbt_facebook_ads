@@ -25,4 +25,5 @@ vars:
   airbyte_intercom:
     contacts: "{{ source('airbyte_intercom','contacts') }}"
     companies: "{{ source('airbyte_intercom','companies') }}"
+    companies_plan: "{{ source('airbyte_intercom','companies_plan') }}"
     conversations: "{{ source('airbyte_intercom','conversations') }}"

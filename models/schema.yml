@@ -108,6 +108,7 @@ sources:
       - name: contacts
       - name: conversations
       - name: companies
+      - name: companies_plan
 
 metrics:
   - name: number_of_contacts
