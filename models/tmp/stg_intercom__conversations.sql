@@ -8,5 +8,7 @@ select
     title as conversation_title,
     state as conversation_state,
     read as is_read,
+    {{ fivetran_utils.json_parse(string="conversation_rating", string_path=["rating"]) }} as rating,
+    {{ fivetran_utils.json_parse(string="conversation_rating", string_path=["remark"]) }} as remark,
     *
 from {{ var('conversations') }}

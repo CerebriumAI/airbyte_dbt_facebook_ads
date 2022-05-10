@@ -1,4 +1,9 @@
-with conversations as (
+with latest_conversation as (
+    select *
+    from {{ ref('int_intercom__latest_conversation') }}
+),
+
+conversations as (
 
     select
         conversation_id,
@@ -9,9 +14,11 @@ with conversations as (
         conversation_type,
         conversation_title,
         conversation_state,
-        is_read
+        is_read,
+        rating as conversation_rating,
+        remark as conversation_remark
 
-    from {{ ref('stg_intercom__conversations') }}
+    from latest_conversation
 
 )
 
