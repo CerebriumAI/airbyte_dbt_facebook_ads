@@ -138,3 +138,25 @@ metrics:
       - conversation_type
       - conversation_state
       - is_read
+
+  - name: average_time_to_first_assignment_minutes
+    label: Average time to first assignment minutes
+    model: ref('intercom__conversation_metrics')
+    description: "The average time to first assignment minutes"
+
+    type: average
+    sql: time_to_first_assignment_minutes
+
+    timestamp: created_at_timestamp
+    time_grains: [day, week, month]
+
+  - name: average_time_to_first_response_minutes
+    label: Average time to first response minutes
+    model: ref('intercom__conversation_metrics')
+    description: "The average time to first response minutes"
+
+    type: average
+    sql: time_to_first_response_minutes
+
+    timestamp: created_at_timestamp
+    time_grains: [day, week, month]
