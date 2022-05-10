@@ -11,16 +11,16 @@ with contacts as (
 
 ),
 
-     final_contacts as (
+final_contacts as (
 
-         select
-             contacts.contact_id,
-             contacts.name,
-             contacts.email,
-             contacts.phone,
-             contacts.last_seen_at_timestamp,
-             contacts.created_at_timestamp
-         from contacts
-     )
+    select
+         contacts.contact_id,
+         contacts.name,
+         contacts.email,
+         contacts.phone,
+         contacts.last_seen_at_timestamp,
+         contacts.created_at_timestamp
+    from contacts
+)
 
 select * from final_contacts
