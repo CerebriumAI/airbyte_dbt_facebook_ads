@@ -138,6 +138,7 @@ metrics:
       - conversation_type
       - conversation_state
       - is_read
+      - sla_status # one of: “hit”, ”missed”, or “cancelled”.
 
   - name: average_time_to_first_assignment_minutes
     label: Average time to first assignment minutes

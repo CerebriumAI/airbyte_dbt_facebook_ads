@@ -16,7 +16,9 @@ conversations as (
         conversation_state,
         is_read,
         rating as conversation_rating,
-        remark as conversation_remark
+        remark as conversation_remark,
+        sla_name,
+        sla_status
 
     from latest_conversation
 

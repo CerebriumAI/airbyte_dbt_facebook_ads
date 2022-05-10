@@ -10,5 +10,7 @@ select
     read as is_read,
     {{ fivetran_utils.json_parse(string="conversation_rating", string_path=["rating"]) }} as rating,
     {{ fivetran_utils.json_parse(string="conversation_rating", string_path=["remark"]) }} as remark,
+    {{ fivetran_utils.json_parse(string="sla_applied", string_path=["sla_name"]) }} as sla_name,
+    {{ fivetran_utils.json_parse(string="sla_applied", string_path=["sla_status"]) }} as sla_status,
     *
 from {{ var('conversations') }}
