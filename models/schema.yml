@@ -122,10 +122,10 @@ metrics:
     timestamp: created_at_timestamp
     time_grains: [day, week, month]
 
-  - name: number_of_unread_conversations
-    label: Number of unread conversations
+  - name: number_of_conversations
+    label: Number of conversations
     model: ref('intercom__conversations')
-    description: "The number of unread conversations"
+    description: "The number of conversations"
 
     type: count
     sql: conversation_id
