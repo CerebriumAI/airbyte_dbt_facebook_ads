@@ -15,10 +15,12 @@ conversations as (
         conversation_title,
         conversation_state,
         is_read,
-        rating as conversation_rating,
-        remark as conversation_remark,
+        conversation_rating_value as conversation_rating,
+        conversation_remark,
         sla_name,
-        sla_status
+        sla_status,
+        assignee_type,
+        last_closed_by_id
 
     from latest_conversation
 

@@ -89,7 +89,7 @@ models:
         description: The title of the conversation created by the initiator.
       - name: first_close_by_admin_id
         description: The admin_id of the admin who was first assigned to the conversation.
-      - name: last_close_by_admin_id
+      - name: last_closed_by_id
         description: The admin_id of the admin who last closed the conversation.
       - name: first_contact_author_id
         description: The contact_id of the contact who was first associated with the conversation.
@@ -105,11 +105,16 @@ sources:
     schema: "{{ var('intercom_schema', 'intercom') }}"
     database: "{% if target.type != 'spark'%}{{ var('intercom_database', target.database) }}{% endif %}"
     tables:
+      - name: admins
       - name: companies
       - name: companies_plan
       - name: contacts
       - name: conversation_parts
       - name: conversations
+      - name: conversations_assignee
+      - name: conversations_conversation_rating
+      - name: conversations_sla_applied
+      - name: conversations_statistics
 
 metrics:
   - name: number_of_contacts

@@ -23,8 +23,13 @@ models:
 
 vars:
   airbyte_intercom:
-    contacts: "{{ source('airbyte_intercom','contacts') }}"
+    admins: "{{ source('airbyte_intercom','admins') }}"
     companies: "{{ source('airbyte_intercom','companies') }}"
     companies_plan: "{{ source('airbyte_intercom','companies_plan') }}"
-    conversations: "{{ source('airbyte_intercom','conversations') }}"
+    contacts: "{{ source('airbyte_intercom','contacts') }}"
     conversation_parts: "{{ source('airbyte_intercom','conversation_parts') }}"
+    conversations: "{{ source('airbyte_intercom','conversations') }}"
+    conversations_assignee: "{{ source('airbyte_intercom','conversations_assignee') }}"
+    conversations_conversation_rating: "{{ source('airbyte_intercom','conversations_conversation_rating') }}"
+    conversations_sla_applied: "{{ source('airbyte_intercom','conversations_sla_applied') }}"
+    conversations_statistics: "{{ source('airbyte_intercom','conversations_statistics') }}"
