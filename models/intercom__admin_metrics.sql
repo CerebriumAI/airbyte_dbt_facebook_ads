@@ -39,7 +39,6 @@ final as (
     admin_table.admin_id,
     admin_table.name as admin_name,
 
-
     admin_table.job_title,
     admin_metrics.total_conversations_closed,
     admin_metrics.average_conversation_parts,
