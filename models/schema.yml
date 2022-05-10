@@ -105,10 +105,11 @@ sources:
     schema: "{{ var('intercom_schema', 'intercom') }}"
     database: "{% if target.type != 'spark'%}{{ var('intercom_database', target.database) }}{% endif %}"
     tables:
-      - name: contacts
-      - name: conversations
       - name: companies
       - name: companies_plan
+      - name: contacts
+      - name: conversation_parts
+      - name: conversations
 
 metrics:
   - name: number_of_contacts
@@ -133,3 +134,7 @@ metrics:
     timestamp: created_at_timestamp
     time_grains: [day, week, month]
 
+    dimensions:
+      - conversation_type
+      - conversation_state
+      - is_read

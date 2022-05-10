@@ -2,6 +2,8 @@ select
     id as conversation_id,
     created_at as created_at_timestamp,
     updated_at as updated_at_timestamp,
+    {{ dbt_date.from_unixtimestamp('created_at') }} as created_at_date,
+    {{ dbt_date.from_unixtimestamp('updated_at') }} as updated_at_date,
     type as conversation_type,
     title as conversation_title,
     state as conversation_state,
