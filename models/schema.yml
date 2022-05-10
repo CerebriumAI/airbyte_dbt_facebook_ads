@@ -121,7 +121,7 @@ metrics:
     sql: contact_id
 
     timestamp: created_at_timestamp
-    time_grains: [day, week, month]
+    time_grains: [day, week, month, year]
 
   - name: number_of_conversations
     label: Number of conversations
@@ -132,7 +132,7 @@ metrics:
     sql: conversation_id
 
     timestamp: created_at_timestamp
-    time_grains: [day, week, month]
+    time_grains: [day, week, month, year]
 
     dimensions:
       - conversation_type
@@ -148,7 +148,7 @@ metrics:
     sql: time_to_first_assignment_minutes
 
     timestamp: created_at_timestamp
-    time_grains: [day, week, month]
+    time_grains: [day, week, month, year]
 
   - name: average_time_to_first_response_minutes
     label: Average time to first response minutes
@@ -159,4 +159,15 @@ metrics:
     sql: time_to_first_response_minutes
 
     timestamp: created_at_timestamp
-    time_grains: [day, week, month]
+    time_grains: [day, week, month, year]
+
+  - name: average_conversation_rating
+    label: Average conversation rating
+    model: ref('intercom__conversations')
+    description: "The average conversation rating"
+
+    type: average
+    sql: conversation_rating
+
+    timestamp: created_at_timestamp
+    time_grains: [day, week, month, year]
