@@ -1,10 +1,11 @@
 with companies_plan as (
 
-    select
+    select distinct
         _airbyte_companies_hashid,
         plan_id,
         plan_name
     from {{ ref('stg_intercom__companies_plan' )}}
+        group by _airbyte_companies_hashid, plan_id, plan_name
 
 ),
 
@@ -23,8 +24,8 @@ companies as (
         user_count,
         website
 
-    from {{ ref('stg_intercom__companies') }}
-    left join companies_plan using (_airbyte_companies_hashid)
+    from {{ ref('int_intercom__latest_company') }}
+        left join companies_plan using (_airbyte_companies_hashid)
 
 )
 
