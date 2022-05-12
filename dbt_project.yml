@@ -1,8 +1,8 @@
-name: "airbyte_intercom"
-version: "0.1.0"
-require-dbt-version: [">=1.0.0"]
+name: 'airbyte_intercom'
+version: '0.1.0'
+require-dbt-version: ['>=1.0.0']
 config-version: 2
-profile: "default"
+profile: 'default'
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
@@ -23,4 +23,13 @@ models:
 
 vars:
   airbyte_intercom:
-    users: "{{ source('airbyte_intercom','users') }}"
+    admins: "{{ source('airbyte_intercom','admins') }}"
+    companies: "{{ source('airbyte_intercom','companies') }}"
+    companies_plan: "{{ source('airbyte_intercom','companies_plan') }}"
+    contacts: "{{ source('airbyte_intercom','contacts') }}"
+    conversation_parts: "{{ source('airbyte_intercom','conversation_parts') }}"
+    conversations: "{{ source('airbyte_intercom','conversations') }}"
+    conversations_assignee: "{{ source('airbyte_intercom','conversations_assignee') }}"
+    conversations_conversation_rating: "{{ source('airbyte_intercom','conversations_conversation_rating') }}"
+    conversations_sla_applied: "{{ source('airbyte_intercom','conversations_sla_applied') }}"
+    conversations_statistics: "{{ source('airbyte_intercom','conversations_statistics') }}"
