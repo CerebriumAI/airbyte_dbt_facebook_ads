@@ -1,7 +1,17 @@
 version: 2
 
+sources:
+  - name: airbyte_facebook_ads
+    schema: "{{ var('facebook_ads_schema', 'facebook_marketing_airbyte_masch') }}"
+    database: "{% if target.type != 'spark'%}{{ var('facebook_ads_database', target.database) }}{% endif %}"
+    tables:
+      - name: ads
+      - name: ad_creative
+      - name: ad_creatives
+      - name: ad_insights
+      - name: campaigns
 models:
-  - name: intercom__admin_metrics
+  - name: facebook_ads__admin_metrics
     description: >
       Each record represents an individual admin (employee) and a unique team they are assigned on, enriched with admin specific conversation aggregates. For example, the admin's total conversations, average rating, and median response times by specific team.
     columns:
@@ -28,12 +38,12 @@ models:
       - name: median_time_to_last_close_minutes
         description: The admins median value of time it took to the last closure of a conversation.
 
-  - name: intercom__companies
+  - name: facebook_ads__companies
     description: >
       Each record represents a single company, enriched with data related to the company industry, monthly_spend, and user_count.
     columns:
       - name: company_id
-        description: The unique identifier representing the historical Intercom defined company.
+        description: The unique identifier representing the historical facebook_ads defined company.
         tests:
           - not_null
           - unique
@@ -58,13 +68,13 @@ models:
       - name: updated_at_timestamp
         description: The time the company was last updated at.
 
-  - name: intercom__contacts
+  - name: facebook_ads__contacts
     description: >
       Each record represents a single contact, enriched with data identifying the contacts role, if they have unsubscribed from 
       the email list, last contacted information, and which company they belong to.
     columns:
       - name: contact_id
-        description: The unique identifier for the contact which is given by Intercom.
+        description: The unique identifier for the contact which is given by facebook_ads.
         tests:
           - not_null
           - unique
@@ -73,7 +83,7 @@ models:
       - name: admin_id
         description: The unique identifier representing the admin which has been assigned ownership of the contact.
       - name: created_at_timestamp
-        description: The time when the contact was created within Intercom.
+        description: The time when the contact was created within facebook_ads.
       - name: updated_at_timestamp
         description: The time when the contact was last updated.
       - name: signed_up_at_timestamp
@@ -95,7 +105,7 @@ models:
       - name: all_contact_company_names
         description: String aggregation of all companies the contact is associated with.
 
-  - name: intercom__conversations
+  - name: facebook_ads__conversations
     description: >
       Each record represents a single conversation, enriched with data from the multiple conversation parts. The conversation 
       parts provide relevant information such as who was assigned to the conversation, which contact the conversation was with, 
@@ -127,9 +137,9 @@ models:
       - name: is_read
         description: Boolean indicating whether the conversation message has been read.
 
-  - name: intercom__conversation_metrics
+  - name: facebook_ads__conversation_metrics
     description: >
-      Each record represents a single row from intercom__conversation_enhanced, enriched with aggregates which determine 
+      Each record represents a single row from facebook_ads__conversation_enhanced, enriched with aggregates which determine 
       time to first response, time to first close, and time to last close.
     columns:
       - name: count_reopens
@@ -221,9 +231,9 @@ models:
         description: An optional field to add a remark to correspond to the number rating.
 
 sources:
-  - name: airbyte_intercom
-    schema: "{{ var('intercom_schema', 'intercom') }}"
-    database: "{% if target.type != 'spark'%}{{ var('intercom_database', target.database) }}{% endif %}"
+  - name: airbyte_facebook_ads
+    schema: "{{ var('facebook_ads_schema', 'facebook_ads') }}"
+    database: "{% if target.type != 'spark'%}{{ var('facebook_ads_database', target.database) }}{% endif %}"
     tables:
       - name: admins
       - name: companies
@@ -239,7 +249,7 @@ sources:
 metrics:
   - name: number_of_contacts
     label: Number of contacts
-    model: ref('intercom__contacts')
+    model: ref('facebook_ads__contacts')
     description: "The number of contacts"
 
     type: count
@@ -250,7 +260,7 @@ metrics:
 
   - name: number_of_conversations
     label: Number of conversations
-    model: ref('intercom__conversations')
+    model: ref('facebook_ads__conversations')
     description: "The number of conversations"
 
     type: count
@@ -267,7 +277,7 @@ metrics:
 
   - name: average_time_to_first_assignment_minutes
     label: Average time to first assignment minutes
-    model: ref('intercom__conversation_metrics')
+    model: ref('facebook_ads__conversation_metrics')
     description: "The average time to first assignment minutes"
 
     type: average
@@ -278,7 +288,7 @@ metrics:
 
   - name: average_time_to_first_response_minutes
     label: Average time to first response minutes
-    model: ref('intercom__conversation_metrics')
+    model: ref('facebook_ads__conversation_metrics')
     description: "The average time to first response minutes"
 
     type: average
@@ -289,7 +299,7 @@ metrics:
 
   - name: average_conversation_rating
     label: Average conversation rating
-    model: ref('intercom__conversations')
+    model: ref('facebook_ads__conversations')
     description: "The average conversation rating"
 
     type: average

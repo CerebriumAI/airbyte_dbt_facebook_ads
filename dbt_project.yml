@@ -1,4 +1,4 @@
-name: 'airbyte_intercom'
+name: 'airbyte_facebook_ads'
 version: '0.1.0'
 require-dbt-version: ['>=1.0.0']
 config-version: 2
@@ -16,20 +16,16 @@ clean-targets:
   - "dbt_packages"
 
 models:
-  airbyte_intercom:
+  airbyte_facebook_ads:
     materialized: table
     tmp:
       materialized: view
 
 vars:
-  airbyte_intercom:
-    admins: "{{ source('airbyte_intercom','admins') }}"
-    companies: "{{ source('airbyte_intercom','companies') }}"
-    companies_plan: "{{ source('airbyte_intercom','companies_plan') }}"
-    contacts: "{{ source('airbyte_intercom','contacts') }}"
-    conversation_parts: "{{ source('airbyte_intercom','conversation_parts') }}"
-    conversations: "{{ source('airbyte_intercom','conversations') }}"
-    conversations_assignee: "{{ source('airbyte_intercom','conversations_assignee') }}"
-    conversations_conversation_rating: "{{ source('airbyte_intercom','conversations_conversation_rating') }}"
-    conversations_sla_applied: "{{ source('airbyte_intercom','conversations_sla_applied') }}"
-    conversations_statistics: "{{ source('airbyte_intercom','conversations_statistics') }}"
+  facebook_ads_schema: "facebook_marketing_airbyte_masch"
+  airbyte_facebook_ads:
+    ads: "{{ source('airbyte_facebook_ads','ads') }}"
+    ad_creative: "{{ source('airbyte_facebook_ads','ad_creative') }}"
+    ad_creatives: "{{ source('airbyte_facebook_ads','ad_creatives') }}"
+    ad_insights: "{{ source('airbyte_facebook_ads','ad_insights') }}"
+    campaigns: "{{ source('airbyte_facebook_ads','campaigns') }}"

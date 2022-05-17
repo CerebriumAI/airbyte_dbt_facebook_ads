@@ -1,8 +1,8 @@
 [![Apache License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-# Intercom Airbyte
+# facebook_ads Airbyte
 
-This package models Intercom data from [Airbyte's connector](https://airbyte.com/connectors/intercom).
+This package models facebook_ads data from [Airbyte's connector](https://airbyte.com/connectors/facebook_ads).
 
 Let us know which connectors you would like to see next [here](https://19au6qz3a6s.typeform.com/to/c284SPEN)
 
@@ -16,7 +16,7 @@ This package contains staging models, with the following naming conventions acro
 
 ## DBT Metrics
 
-This package contains configurations for DBT metrics for you to get up and running quickly with standard Intercom metrics in your existing BI tools.
+This package contains configurations for DBT metrics for you to get up and running quickly with standard facebook_ads metrics in your existing BI tools.
 
 ## Installation Instructions
 
@@ -26,7 +26,7 @@ Include in your `packages.yml`
 
 ```yaml
 packages:
-  - package: cerebriumAI/dbt-intercom
+  - package: cerebriumAI/dbt-facebook_ads
     version: ["0.1.0"]
 ```
 
@@ -34,7 +34,7 @@ packages:
 
 ### Source Data Location
 
-By default, this package will look for your Intercom data in the `intercom` schema of your [target database](https://docs.getdbt.com/docs/running-a-dbt-project/using-the-command-line-interface/configure-your-profile). If this is not where your Intercom data is, please add the following configuration to your `dbt_project.yml` file:
+By default, this package will look for your facebook_ads data in the `facebook_ads` schema of your [target database](https://docs.getdbt.com/docs/running-a-dbt-project/using-the-command-line-interface/configure-your-profile). If this is not where your facebook_ads data is, please add the following configuration to your `dbt_project.yml` file:
 
 ```yml
 # dbt_project.yml
@@ -42,8 +42,8 @@ By default, this package will look for your Intercom data in the `intercom` sche
 config-version: 2
 
 vars:
-  intercom_schema: your_schema_name
-  intercom_database: your_database_name
+  facebook_ads_schema: your_schema_name
+  facebook_ads_database: your_database_name
 ```
 
 ## Database Support
