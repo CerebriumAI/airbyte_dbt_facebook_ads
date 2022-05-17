@@ -25,7 +25,7 @@ vars:
   facebook_ads_schema: "facebook_marketing_airbyte_masch"
   airbyte_facebook_ads:
     ads: "{{ source('airbyte_facebook_ads','ads') }}"
-    ad_creative: "{{ source('airbyte_facebook_ads','ad_creative') }}"
+    ads_creative: "{{ source('airbyte_facebook_ads','ads_creative') }}"
     ad_creatives: "{{ source('airbyte_facebook_ads','ad_creatives') }}"
-    ad_insights: "{{ source('airbyte_facebook_ads','ad_insights') }}"
+    ads_insights: "{{ source('airbyte_facebook_ads','ads_insights') }}"
     campaigns: "{{ source('airbyte_facebook_ads','campaigns') }}"

@@ -11,11 +11,11 @@ spend
 
 with campaigns as (
     select
-        id as campaign_id,
-        name as campaign_name,
+        campaign_id,
+        campaign_name,
         objective,
         account_id,
-        created_time as created_at_timestamp
+        created_at_date
     from {{ ref('stg_facebook_ads_campaigns') }}
 ),
 
@@ -25,10 +25,10 @@ ads as (
         ad_name,
         adset_id,
         account_id,
-        account_name
+        account_name,
         campaign_id,
         campaign_name,
-        created_at_timestamp,
+        created_at_date,
         spend,
         clicks,
         impressions
@@ -37,17 +37,17 @@ ads as (
 
 final_campaigns as (
     select
-        campaigns.created_at_timestamp,
+        campaigns.created_at_date as date_day,
         campaigns.campaign_id,
         campaigns.campaign_name,
         campaigns.account_id,
         ads.account_name,
         campaigns.objective,
-        sum(ads.spend),
-        sum(ads.clicks),
-        sum(ads.impressions)
+        sum(ads.spend) as spend,
+        sum(ads.clicks) as clicks,
+        sum(ads.impressions) as impressions
     from campaigns
-    left join ads using (campaign_id) and (created_at_timestamp)
+    left join ads using (campaign_id, created_at_date)
     {{ dbt_utils.group_by(n=6) }}
 )
 

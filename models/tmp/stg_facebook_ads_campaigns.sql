@@ -4,7 +4,7 @@ with campaigns as (
         name as campaign_name,
         objective,
         account_id,
-        created_time as created_at_timestamp
+        date(created_time) as created_at_date
     from {{ var('campaigns') }}
 )
 

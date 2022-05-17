@@ -6,304 +6,221 @@ sources:
     database: "{% if target.type != 'spark'%}{{ var('facebook_ads_database', target.database) }}{% endif %}"
     tables:
       - name: ads
-      - name: ad_creative
+      - name: ads_creative
       - name: ad_creatives
-      - name: ad_insights
+      - name: ads_insights
       - name: campaigns
+
 models:
-  - name: facebook_ads__admin_metrics
+  - name: facebook_ads__ad_adapter
     description: >
-      Each record represents an individual admin (employee) and a unique team they are assigned on, enriched with admin specific conversation aggregates. For example, the admin's total conversations, average rating, and median response times by specific team.
+      This model is used to show the utm parameters on a ad, adset and campaign level.
     columns:
-      - name: admin_id
-        description: The unique identifier representing the admin.
-      - name: admin_name
-        description: The name of the admin.
-      - name: team_name
-        description: The team ID the admin is associated with.
-      - name: job_title
-        description: The admin job title.
-      - name: total_conversations_closed
-        description: The admins sum of total closed conversations.
-      - name: average_conversation_parts
-        description: The admins average number of parts associated with a single conversation.
-      - name: average_conversation_rating
-        description: The admins total average rating given to conversations they closed.
-      - name: median_conversations_reopened
-        description: The admins median value of times they reopened conversations.
-      - name: median_conversation_assignments
-        description: The admins median value of times they closed a conversation and had other assignees on the conversation.
-      - name: median_time_to_first_response_time_minutes
-        description: The admins median value of time it took for their first response on a conversation.
-      - name: median_time_to_last_close_minutes
-        description: The admins median value of time it took to the last closure of a conversation.
-
-  - name: facebook_ads__companies
-    description: >
-      Each record represents a single company, enriched with data related to the company industry, monthly_spend, and user_count.
-    columns:
-      - name: company_id
-        description: The unique identifier representing the historical facebook_ads defined company.
+      - name: date_day
+        description: The date of the ad, adset or campaign.
         tests:
           - not_null
-          - unique
-      - name: company_name
-        description: The name of the company.
-      - name: created_at_timestamp
-        description: The time the company was created.
-      - name: website
-        description: The website associated with the company.
-      - name: industry
-        description: The defined industry the company operates in.
-      - name: monthly_spend
-        description: How much revenue the company generates for your business.
-      - name: user_count
-        description: The total count of users associated with the company.
-      - name: session_count
-        description: The count of sessions the company has recorded.
-      - name: plan_id
-        description: Unique identifier representing the company plan.
-      - name: plan_name
-        description: The name of the plan you have associated with the company.
-      - name: updated_at_timestamp
-        description: The time the company was last updated at.
-
-  - name: facebook_ads__contacts
-    description: >
-      Each record represents a single contact, enriched with data identifying the contacts role, if they have unsubscribed from 
-      the email list, last contacted information, and which company they belong to.
-    columns:
-      - name: contact_id
-        description: The unique identifier for the contact which is given by facebook_ads.
+      - name: account_id
+        description: The unique id of the account.
         tests:
           - not_null
-          - unique
-      - name: contact_name
-        description: The name of the contact.
-      - name: admin_id
-        description: The unique identifier representing the admin which has been assigned ownership of the contact.
-      - name: created_at_timestamp
-        description: The time when the contact was created within facebook_ads.
-      - name: updated_at_timestamp
-        description: The time when the contact was last updated.
-      - name: signed_up_at_timestamp
-        description: The time the contact signed up.
-      - name: email
-        description: The contacts email.
-      - name: phone
-        description: The contacts phone number.
-      - name: last_contacted_at
-        description: The time when the contact was last messaged.
-      - name: last_email_opened_at
-        description: The time when a contact last opened an email.
-      - name: last_email_clicked_at
-        description: The time when the contact last clicked a link in an email.
-      - name: last_replied_at
-        description: The time when the contact last messaged in.
-      - name: is_unsubscribed_from_emails
-        description: Boolean indicating whether the contact has unsubscribed from emails.
-      - name: all_contact_company_names
-        description: String aggregation of all companies the contact is associated with.
-
-  - name: facebook_ads__conversations
-    description: >
-      Each record represents a single conversation, enriched with data from the multiple conversation parts. The conversation 
-      parts provide relevant information such as who was assigned to the conversation, which contact the conversation was with, 
-      the current conversation state, who closed the conversation, and the final conversation ratings from the contact.
-    columns:
-      - name: conversation_id
-        description: The id representing the conversation.
+      - name: account_name
+        description: The name of the account.
         tests:
           - not_null
-          - unique
-      - name: conversation_created_at
-        description: The time the conversation was created.
-      - name: conversation_last_updated_at
-        description: The date the conversation was last updated at.
-      - name: conversation_type
-        description: The type of conversation. This includes conversation push facebook twitter and email.
-      - name: conversation_title
-        description: The title of the conversation created by the initiator.
-      - name: first_close_by_admin_id
-        description: The admin_id of the admin who was first assigned to the conversation.
-      - name: last_closed_by_id
-        description: The admin_id of the admin who last closed the conversation.
-      - name: first_contact_author_id
-        description: The contact_id of the contact who was first associated with the conversation.
-      - name: last_contact_author_id
-        description: The contact_id of the contact who was last associated with the conversation before closing.
-      - name: conversation_state
-        description: The current state of the conversation (open or close).
-      - name: is_read
-        description: Boolean indicating whether the conversation message has been read.
-
-  - name: facebook_ads__conversation_metrics
-    description: >
-      Each record represents a single row from facebook_ads__conversation_enhanced, enriched with aggregates which determine 
-      time to first response, time to first close, and time to last close.
-    columns:
-      - name: count_reopens
-        description: The count of conversation parts where the part_type value was 'open'. Note, a conversation part_type must be manually opened by an admin.
-      - name: count_total_parts
-        description: The count of total conversation parts for a single given conversation. Max parts are 500.
-      - name: count_assignments
-        description: The count of conversation parts where the part_type value contained 'assignment'.
-      - name: first_contact_reply_at
-        description: The time when the conversation author of type user or lead commented in a conversation.
-      - name: first_assignment_at
-        description: The time when the first conversation assignment was made.
-      - name: time_to_first_assignment_minutes
-        description: The time difference (not factoring in business hours) between the conversation creation and the first_assignment_at.
-      - name: first_admin_response_at
-        description: The time when the conversation part author of type admin first commented in a conversation.
-      - name: time_to_first_response_minutes
-        description: The time difference (not factoring in business hours) between the conversation creation and the first_admin_response_at.
-      - name: first_close_at
-        description: The time of the first conversation part where part_type was 'close' indicating the conversation was closed.
-      - name: time_to_first_close_minutes
-        description: The time difference (not factoring in business hours) between the first_admin_response_at and the first_close_at.
-      - name: first_reopen_at
-        description: The time of the first conversation part where part_type was 'open' indicating the conversation was reopened.
-      - name: last_assignment_at
-        description: The time of the last conversation assignment.
-      - name: time_to_last_assignment_minutes
-        description: The time difference (not factoring in business hours) between the conversation creation and the last_assignment_at.
-      - name: last_contact_reply_at
-        description: The time of the last contact response within the conversation.
-      - name: last_admin_response_at
-        description: The time of the last admin response within the conversation.
-      - name: last_reopen_at
-        description: The time of the last conversation part where part_type was 'open' indicating the conversation was reopened.
-      - name: last_close_at
-        description: The time of the last conversation part where part_type was 'close' indicating the conversation was closed.
-      - name: time_to_last_close_minutes
-        description: The time difference (not factoring in business hours) between the last_close_at and the first_contact_reply.
-      - name: conversation_id
-        description: The id representing the conversation.
+      - name: campaign_id
+        description: The unique id of the campaign.
         tests:
           - not_null
-          - unique
-      - name: conversation_created_at
-        description: The time the conversation was created.
-      - name: conversation_last_updated_at
-        description: The date the conversation was last updated at.
-      - name: conversation_type
-        description: The type of conversation. This includes conversation push facebook twitter and email.
-      - name: all_conversation_tags
-        description: String aggregation of all tags associated with the conversation.
-      - name: conversation_initiated_type
-        description: How the conversation was initially delivered to the responder.
-      - name: conversation_subject
-        description: The subject of the conversation created by the initiator.
-      - name: conversation_assignee_type
-        description: The type of user the conversation is assigned to. If it is not assigned to a user it will return null.
-      - name: conversation_author_type
-        description: The type of individual who authored the first message. Will be either contact or admin.
-      - name: first_close_by_admin_id
-        description: The admin_id of the admin who was first assigned to the conversation.
-      - name: last_close_by_admin_id
-        description: The admin_id of the admin who last closed the conversation.
-      - name: first_contact_author_id
-        description: The contact_id of the contact who was first associated with the conversation.
-      - name: last_contact_author_id
-        description: The contact_id of the contact who was last associated with the conversation before closing.
-      - name: conversation_state
-        description: The current state of the conversation (open or close).
-      - name: is_read
-        description: Boolean indicating whether the conversation message has been read.
-      - name: waiting_since
-        description: The last time a contact responded to an admin. The time a customer started waiting for a response. Set to null if last reply is from an admin.
-      - name: snoozed_until
-        description: If set this is the time in the future when this conversation will be marked as open.
-      - name: sla_name
-        description: The name of the SLA as given by the teammate when it was created.
-      - name: sla_status
-        description: One of “hit”, ”missed”, or “cancelled”.
-      - name: all_conversation_admins
-        description: String aggregate of all admins that contributed to the conversation.
-      - name: all_conversation_contacts
-        description: String aggregate of all contacts that contributed to the conversation.
-      - name: all_contact_company_names
-        description: String aggregation of all companies the first_author_contact is associated with.
-      - name: conversation_rating
-        description: An optional field for the customer to rate the conversation which will be between 1 and 5.
-      - name: conversation_remark
-        description: An optional field to add a remark to correspond to the number rating.
+      - name: campaign_name
+        description: The name of the campaign.
+        tests:
+          - not_null
+      - name: adset_id
+        description: The unique id of the adset.
+      - name: adset_name
+        description: The name of the adset.
+        tests:
+          - not_null
+      - name: ad_id
+        description: The unique id of the ad.
+        tests:
+          - not_null
+      - name: ad_name
+        description: The name of the ad.
+        tests:
+          - not_null
+      - name: impressions
+        description: The number of times the ad/adset/campaign was shown.
+      - name: clicks
+        description: The number of clicks the ad/adset/campaign received.
+      - name: spend
+        description: The amount of money spent on the ad/adset/campaign.
 
-sources:
-  - name: airbyte_facebook_ads
-    schema: "{{ var('facebook_ads_schema', 'facebook_ads') }}"
-    database: "{% if target.type != 'spark'%}{{ var('facebook_ads_database', target.database) }}{% endif %}"
-    tables:
-      - name: admins
-      - name: companies
-      - name: companies_plan
-      - name: contacts
-      - name: conversation_parts
-      - name: conversations
-      - name: conversations_assignee
-      - name: conversations_conversation_rating
-      - name: conversations_sla_applied
-      - name: conversations_statistics
+  - name: facebook_ads__ad_set_report
+    description: >
+      This model shows the number of impressions, clicks and spend for each adset.
+    columns:
+      - name: date_day
+        description: The date of the ad, adset or campaign.
+        tests:
+          - not_null
+      - name: account_id
+        description: The unique id of the account.
+        tests:
+          - not_null
+      - name: account_name
+        description: The name of the account.
+        tests:
+          - not_null
+      - name: campaign_id
+        description: The unique id of the campaign.
+        tests:
+          - not_null
+      - name: campaign_name
+        description: The name of the campaign.
+        tests:
+          - not_null
+      - name: adset_id
+        description: The unique id of the adset.
+        tests:
+          - not_null
+      - name: adset_name
+        description: The name of the adset.
+        tests:
+          - not_null
+      - name: impressions
+        description: The number of times the ad/adset/campaign was shown.
+      - name: clicks
+        description: The number of clicks the ad/adset/campaign received.
+      - name: spend
+        description: The amount of money spent on the ad/adset/campaign.
+       
 
-metrics:
-  - name: number_of_contacts
-    label: Number of contacts
-    model: ref('facebook_ads__contacts')
-    description: "The number of contacts"
+  - name: facebook_ads__ad_campaign_report
+    description: >
+      This model shows the number of impressions, clicks and spend for each campaign.
+    columns:
+      - name: date_day
+        description: The date of the ad, adset or campaign.
+        tests:
+          - not_null
+      - name: account_id
+        description: The unique id of the account.
+        tests:
+          - not_null
+      - name: account_name
+        description: The name of the account.
+        tests:
+          - not_null
+      - name: campaign_id
+        description: The unique id of the campaign.
+        tests:
+          - not_null
+      - name: campaign_name
+        description: The name of the campaign.
+        tests:
+          - not_null
+      - name: impressions
+        description: The number of times the ad/adset/campaign was shown.
+      - name: clicks
+        description: The number of clicks the ad/adset/campaign received.
+      - name: spend
+        description: The amount of money spent on the ad/adset/campaign.
+  
+  metrics:
+  - name: total_adset_spend
+    label: Total spend by adset
+    model: ref('facebook_ads__ad_set_report')
+    description: "The amount spent on each adset"
 
-    type: count
-    sql: contact_id
+    type: sum
+    sql: spend
 
-    timestamp: created_at_timestamp
-    time_grains: [day, week, month, year]
-
-  - name: number_of_conversations
-    label: Number of conversations
-    model: ref('facebook_ads__conversations')
-    description: "The number of conversations"
-
-    type: count
-    sql: conversation_id
-
-    timestamp: created_at_timestamp
-    time_grains: [day, week, month, year]
+    timestamp: date_day
+    time_grains: [day, week, month]
 
     dimensions:
-      - conversation_type
-      - conversation_state
-      - is_read
-      - sla_status # one of: “hit”, ”missed”, or “cancelled”.
+      - adset_name
+      - campaign_name
+      - account_name
 
-  - name: average_time_to_first_assignment_minutes
-    label: Average time to first assignment minutes
-    model: ref('facebook_ads__conversation_metrics')
-    description: "The average time to first assignment minutes"
+  - name: total_adset_clicks
+    label: Total clicks by adset
+    model: ref('facebook_ads__ad_set_report')
+    description: "The number of clicks on each adset"
 
-    type: average
-    sql: time_to_first_assignment_minutes
+    type: sum
+    sql: clicks
 
-    timestamp: created_at_timestamp
-    time_grains: [day, week, month, year]
+    timestamp: date_day
+    time_grains: [day, week, month]
 
-  - name: average_time_to_first_response_minutes
-    label: Average time to first response minutes
-    model: ref('facebook_ads__conversation_metrics')
-    description: "The average time to first response minutes"
+    dimensions:
+      - adset_name
+      - campaign_name
+      - account_name
 
-    type: average
-    sql: time_to_first_response_minutes
+  - name: total_adset_impressions
+    label: Total impressions by adset
+    model: ref('facebook_ads__ad_set_report')
+    description: "The number of impressions on each adset"
 
-    timestamp: created_at_timestamp
-    time_grains: [day, week, month, year]
+    type: sum
+    sql: impressions
 
-  - name: average_conversation_rating
-    label: Average conversation rating
-    model: ref('facebook_ads__conversations')
-    description: "The average conversation rating"
+    timestamp: date_day
+    time_grains: [day, week, month]
 
-    type: average
-    sql: conversation_rating
+    dimensions:
+      - adset_name
+      - campaign_name
+      - account_name
 
-    timestamp: created_at_timestamp
-    time_grains: [day, week, month, year]
+  - name: total_campaign_spend
+    label: Total impressions by adset
+    model: ref('facebook_ads__campaign_report')
+    description: "The amount spend on each campaign"
+
+    type: sum
+    sql: spend
+
+    timestamp: date_day
+    time_grains: [day, week, month]
+
+    dimensions:
+      - ad_name
+      - campaign_name
+      - account_name
+
+  - name: total_campaign_clicks
+    label: Total clicks by adset
+    model: ref('facebook_ads__campaign_report')
+    description: "The number of clicks on each campaign"
+
+    type: sum
+    sql: clicks
+
+    timestamp: date_day
+    time_grains: [day, week, month]
+
+    dimensions:
+      - ad_name
+      - campaign_name
+      - account_name
+
+  - name: total_campaign_impressions
+    label: Total impressions by adset
+    model: ref('facebook_ads__campaign_report')
+    description: "The number of impressions on each campaign"
+
+    type: sum
+    sql: impressions
+
+    timestamp: date_day
+    time_grains: [day, week, month]
+
+    dimensions:
+      - ad_name
+      - campaign_name
+      - account_name
