@@ -1,16 +1,3 @@
-/*
-date_day,
-account_id,
-account_name,
-campaign_id,
-campaign_name,
-adset_id,
-adset_name,
-clicks,
-impressions,
-spend
-*/
-
 with ads as (
     select
         ad_id,
