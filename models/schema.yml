@@ -83,7 +83,7 @@ models:
       - name: spend
         description: The amount of money spent on the ad/adset/campaign.
   
-  metrics:
+metrics:
   - name: total_adset_spend
     label: Total spend by adset
     model: ref('facebook_ads__ad_set_report')
